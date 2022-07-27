@@ -12,7 +12,7 @@ func TestListens(t *testing.T) {
 	for _, port := range []int{freeTcpPort(), freeTcpPort()} {
 		t.Run(fmt.Sprintf("on port %d", port), func(t *testing.T) {
 			// Arrange
-			svr := server.Create(port)
+			svr := server.Create(port, nil)
 			go func() { _ = svr.Start() }()
 			defer func() { _ = svr.Stop() }()
 			time.Sleep(time.Millisecond)
@@ -35,7 +35,7 @@ func TestStopsListening(t *testing.T) {
 	for _, port := range []int{freeTcpPort(), freeTcpPort()} {
 		t.Run(fmt.Sprintf("on port %d", port), func(t *testing.T) {
 			// Arrange
-			svr := server.Create(port)
+			svr := server.Create(port, nil)
 			go func() { _ = svr.Start() }()
 			time.Sleep(time.Millisecond)
 			_ = svr.Stop()

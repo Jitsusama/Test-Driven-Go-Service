@@ -3,6 +3,7 @@ package e2e
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -13,7 +14,6 @@ import (
 )
 
 func TestGetsCurrentWeatherInCelsius(t *testing.T) {
-	var actualTemp []byte
 	var wttrRequests []wttrRequest
 	listeningPort := freeTcpPort()
 
@@ -47,16 +47,20 @@ func TestGetsCurrentWeatherInCelsius(t *testing.T) {
 		t.Fatalf("http request failed: %v", err)
 	}
 
-	if resp.Header.Get("Content-Type") != "plain/text" {
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected status code to be %d, not %d", http.StatusOK, resp.StatusCode)
+	}
+
+	if resp.Header.Get("Content-Type") != "text/plain" {
 		t.Fatalf(
-			"expected content type of %s, but got %s",
-			"plain/text", resp.Header.Get("Content-Type"),
+			"expected content type of %v, but got %v",
+			"text/plain", resp.Header.Get("Content-Type"),
 		)
 	}
 
-	_, _ = resp.Body.Read(actualTemp)
+	actualTemp, _ := ioutil.ReadAll(resp.Body)
 	if string(actualTemp) != "24" {
-		t.Fatalf("actualTemp should be %s but was %s", "24", string(actualTemp))
+		t.Fatalf("actualTemp should be %v but was %v", "24", string(actualTemp))
 	}
 
 	expected := wttrRequest{method: "GET", path: "/Milton", responseFormat: "j1"}
