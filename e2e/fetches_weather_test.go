@@ -32,8 +32,8 @@ func TestGetsCurrentWeatherInCelsius(t *testing.T) {
 	}))
 
 	app := bootstrap.Create(listeningPort, wttr.URL)
-	go app.Start()
-	defer app.Stop()
+	go func() { _ = app.Start() }()
+	defer func() { _ = app.Stop() }()
 	time.Sleep(time.Millisecond)
 
 	// Act
