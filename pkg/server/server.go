@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"playing-around/pkg/translator"
-	"strings"
 )
 
 // Server represents an HTTP server.
@@ -37,10 +36,10 @@ func (s *Server) Stop() error {
 
 func (s *Server) createHandler() *http.ServeMux {
 	handler := http.NewServeMux()
-	handler.HandleFunc("/weather/", func(w http.ResponseWriter, r *http.Request) {
+	handler.HandleFunc("/weather", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "text/plain")
 
-		city := strings.TrimPrefix(r.URL.Path, "/weather/")
+		city := r.URL.Query().Get("for")
 		temp, _ := s.tempRetriever.RetrieveTemperature(city)
 
 		_, _ = w.Write([]byte(temp))

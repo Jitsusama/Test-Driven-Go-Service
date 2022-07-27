@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestTranslatesWttrRequests(t *testing.T) {
+func TestTranslatesWeatherRequests(t *testing.T) {
 	for _, v := range []struct {
 		city string
 		temp string

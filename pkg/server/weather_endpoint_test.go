@@ -28,7 +28,7 @@ func TestPassesRequestToTranslationLayer(t *testing.T) {
 
 			// Act
 			req, _ := http.NewRequest(
-				"GET", fmt.Sprintf("http://localhost:%d/weather/%s", v.port, v.city), nil,
+				"GET", fmt.Sprintf("http://localhost:%d/weather?for=%s", v.port, v.city), nil,
 			)
 			resp, err := http.DefaultClient.Do(req)
 
