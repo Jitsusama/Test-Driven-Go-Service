@@ -60,7 +60,7 @@ type mockedTranslator struct {
 	retrieveWeathers []string
 }
 
-func (t *mockedTranslator) RetrieveWeather(city string) string {
+func (t *mockedTranslator) RetrieveTemperature(city string) (string, error) {
 	t.retrieveWeathers = append(t.retrieveWeathers, city)
-	return t.stubbedResponse
+	return t.stubbedResponse, nil
 }

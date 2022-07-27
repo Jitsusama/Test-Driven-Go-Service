@@ -12,15 +12,15 @@ import (
 
 // Server represents an HTTP server.
 type Server struct {
-	port   int
-	ctx    context.Context
-	server http.Server
-	trans  translator.Translator
+	port          int
+	ctx           context.Context
+	server        http.Server
+	tempRetriever translator.TemperatureRetriever
 }
 
 // Create a new server.
-func Create(port int, trans translator.Translator) *Server {
-	return &Server{port: port, ctx: context.Background(), trans: trans}
+func Create(port int, tempRetriever translator.TemperatureRetriever) *Server {
+	return &Server{port: port, ctx: context.Background(), tempRetriever: tempRetriever}
 }
 
 // Start the server.
@@ -41,7 +41,7 @@ func (s *Server) createHandler() *http.ServeMux {
 		w.Header().Add("Content-Type", "text/plain")
 
 		city := strings.TrimPrefix(r.URL.Path, "/weather/")
-		temp := s.trans.RetrieveWeather(city)
+		temp, _ := s.tempRetriever.RetrieveTemperature(city)
 
 		_, _ = w.Write([]byte(temp))
 	})

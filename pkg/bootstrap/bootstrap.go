@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"playing-around/pkg/server"
+	"playing-around/pkg/translator"
 )
 
 type App struct {
@@ -9,7 +10,8 @@ type App struct {
 }
 
 func Create(port int, wttrUrl string) *App {
-	svr := server.Create(port, &dummyTranslator{})
+	trans := translator.Create(&dummyWeather{})
+	svr := server.Create(port, trans)
 	return &App{svr}
 }
 
@@ -21,9 +23,9 @@ func (a App) Stop() error {
 	return a.svr.Stop()
 }
 
-type dummyTranslator struct {
+type dummyWeather struct {
 }
 
-func (t *dummyTranslator) RetrieveWeather(city string) string {
-	return "translator not implemented yet"
+func (t *dummyWeather) RetrieveWeather(city string, format string) (translator.Weather, error) {
+	return translator.Weather{CurrentTempInCelsius: "wttr not implemented yet"}, nil
 }
